@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="CPSC471_Fall2016_G7" Class="DatabaseClassDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=136.159.7.84;Initial Catalog=CPSC471_Fall2016_G7;User ID=CPSC471_Fall2016_G7" SettingsObjectName="DataScriptsCPSC471.Properties.Settings" SettingsPropertyName="CPSC471_Fall2016_G7ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.AIRPORT" Member="AIRPORTs">
+    <Type Name="AIRPORT">
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="CityName" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.COUNTRY_ORIGIN" Member="COUNTRY_ORIGINs">
+    <Type Name="COUNTRY_ORIGIN">
+      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>
