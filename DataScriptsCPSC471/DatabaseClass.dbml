@@ -2,13 +2,44 @@
   <Connection Mode="AppSettings" ConnectionString="Data Source=136.159.7.84;Initial Catalog=CPSC471_Fall2016_G7;User ID=CPSC471_Fall2016_G7" SettingsObjectName="DataScriptsCPSC471.Properties.Settings" SettingsPropertyName="CPSC471_Fall2016_G7ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.AIRPORT" Member="AIRPORTs">
     <Type Name="AIRPORT">
-      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="CityName" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CityName" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="AIRPORT_FLIGHT" Member="FLIGHTs" ThisKey="Name" OtherKey="departure_airport" Type="FLIGHT" />
+      <Association Name="AIRPORT_FLIGHT1" Member="FLIGHTs1" ThisKey="Name" OtherKey="arrival_airport" Type="FLIGHT" />
+      <Association Name="MAJOR_CITY_AIRPORT" Member="MAJOR_CITY" ThisKey="CityName" OtherKey="Name" Type="MAJOR_CITY" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.COUNTRY_ORIGIN" Member="COUNTRY_ORIGINs">
-    <Type Name="COUNTRY_ORIGIN">
-      <Column Name="Name" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+  <Table Name="dbo.COUNTRY" Member="COUNTRies">
+    <Type Name="COUNTRY">
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="COUNTRY_MAJOR_CITY" Member="MAJOR_CITies" ThisKey="Name" OtherKey="CountryName" Type="MAJOR_CITY" />
+    </Type>
+  </Table>
+  <Table Name="dbo.COMPANY" Member="COMPANies">
+    <Type Name="COMPANY">
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CityName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FLIGHT" Member="FLIGHTs">
+    <Type Name="FLIGHT">
+      <Column Name="Flight_id" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="distance" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="arrival_time" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="departure_time" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="arrival_airport" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="departure_airport" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="base_price" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="AIRPORT_FLIGHT" Member="AIRPORT" ThisKey="departure_airport" OtherKey="Name" Type="AIRPORT" IsForeignKey="true" />
+      <Association Name="AIRPORT_FLIGHT1" Member="AIRPORT1" ThisKey="arrival_airport" OtherKey="Name" Type="AIRPORT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MAJOR_CITY" Member="MAJOR_CITies">
+    <Type Name="MAJOR_CITY">
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CountryName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="MAJOR_CITY_AIRPORT" Member="AIRPORTs" ThisKey="Name" OtherKey="CityName" Type="AIRPORT" />
+      <Association Name="COUNTRY_MAJOR_CITY" Member="COUNTRY" ThisKey="CountryName" OtherKey="Name" Type="COUNTRY" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

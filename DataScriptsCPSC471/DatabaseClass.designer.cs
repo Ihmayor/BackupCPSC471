@@ -30,6 +30,21 @@ namespace DataScriptsCPSC471
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertAIRPORT(AIRPORT instance);
+    partial void UpdateAIRPORT(AIRPORT instance);
+    partial void DeleteAIRPORT(AIRPORT instance);
+    partial void InsertCOUNTRY(COUNTRY instance);
+    partial void UpdateCOUNTRY(COUNTRY instance);
+    partial void DeleteCOUNTRY(COUNTRY instance);
+    partial void InsertCOMPANY(COMPANY instance);
+    partial void UpdateCOMPANY(COMPANY instance);
+    partial void DeleteCOMPANY(COMPANY instance);
+    partial void InsertFLIGHT(FLIGHT instance);
+    partial void UpdateFLIGHT(FLIGHT instance);
+    partial void DeleteFLIGHT(FLIGHT instance);
+    partial void InsertMAJOR_CITY(MAJOR_CITY instance);
+    partial void UpdateMAJOR_CITY(MAJOR_CITY instance);
+    partial void DeleteMAJOR_CITY(MAJOR_CITY instance);
     #endregion
 		
 		public DatabaseClassDataContext() : 
@@ -70,28 +85,74 @@ namespace DataScriptsCPSC471
 			}
 		}
 		
-		public System.Data.Linq.Table<COUNTRY_ORIGIN> COUNTRY_ORIGINs
+		public System.Data.Linq.Table<COUNTRY> COUNTRies
 		{
 			get
 			{
-				return this.GetTable<COUNTRY_ORIGIN>();
+				return this.GetTable<COUNTRY>();
+			}
+		}
+		
+		public System.Data.Linq.Table<COMPANY> COMPANies
+		{
+			get
+			{
+				return this.GetTable<COMPANY>();
+			}
+		}
+		
+		public System.Data.Linq.Table<FLIGHT> FLIGHTs
+		{
+			get
+			{
+				return this.GetTable<FLIGHT>();
+			}
+		}
+		
+		public System.Data.Linq.Table<MAJOR_CITY> MAJOR_CITies
+		{
+			get
+			{
+				return this.GetTable<MAJOR_CITY>();
 			}
 		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AIRPORT")]
-	public partial class AIRPORT
+	public partial class AIRPORT : INotifyPropertyChanging, INotifyPropertyChanged
 	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private string _Name;
 		
 		private string _CityName;
 		
+		private EntitySet<FLIGHT> _FLIGHTs;
+		
+		private EntitySet<FLIGHT> _FLIGHTs1;
+		
+		private EntityRef<MAJOR_CITY> _MAJOR_CITY;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnCityNameChanging(string value);
+    partial void OnCityNameChanged();
+    #endregion
+		
 		public AIRPORT()
 		{
+			this._FLIGHTs = new EntitySet<FLIGHT>(new Action<FLIGHT>(this.attach_FLIGHTs), new Action<FLIGHT>(this.detach_FLIGHTs));
+			this._FLIGHTs1 = new EntitySet<FLIGHT>(new Action<FLIGHT>(this.attach_FLIGHTs1), new Action<FLIGHT>(this.detach_FLIGHTs1));
+			this._MAJOR_CITY = default(EntityRef<MAJOR_CITY>);
+			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string Name
 		{
 			get
@@ -102,12 +163,16 @@ namespace DataScriptsCPSC471
 			{
 				if ((this._Name != value))
 				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
 					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CityName", DbType="NChar(10) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CityName", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
 		public string CityName
 		{
 			get
@@ -118,23 +183,149 @@ namespace DataScriptsCPSC471
 			{
 				if ((this._CityName != value))
 				{
+					if (this._MAJOR_CITY.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCityNameChanging(value);
+					this.SendPropertyChanging();
 					this._CityName = value;
+					this.SendPropertyChanged("CityName");
+					this.OnCityNameChanged();
 				}
 			}
 		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AIRPORT_FLIGHT", Storage="_FLIGHTs", ThisKey="Name", OtherKey="departure_airport")]
+		public EntitySet<FLIGHT> FLIGHTs
+		{
+			get
+			{
+				return this._FLIGHTs;
+			}
+			set
+			{
+				this._FLIGHTs.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AIRPORT_FLIGHT1", Storage="_FLIGHTs1", ThisKey="Name", OtherKey="arrival_airport")]
+		public EntitySet<FLIGHT> FLIGHTs1
+		{
+			get
+			{
+				return this._FLIGHTs1;
+			}
+			set
+			{
+				this._FLIGHTs1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MAJOR_CITY_AIRPORT", Storage="_MAJOR_CITY", ThisKey="CityName", OtherKey="Name", IsForeignKey=true)]
+		public MAJOR_CITY MAJOR_CITY
+		{
+			get
+			{
+				return this._MAJOR_CITY.Entity;
+			}
+			set
+			{
+				MAJOR_CITY previousValue = this._MAJOR_CITY.Entity;
+				if (((previousValue != value) 
+							|| (this._MAJOR_CITY.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._MAJOR_CITY.Entity = null;
+						previousValue.AIRPORTs.Remove(this);
+					}
+					this._MAJOR_CITY.Entity = value;
+					if ((value != null))
+					{
+						value.AIRPORTs.Add(this);
+						this._CityName = value.Name;
+					}
+					else
+					{
+						this._CityName = default(string);
+					}
+					this.SendPropertyChanged("MAJOR_CITY");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_FLIGHTs(FLIGHT entity)
+		{
+			this.SendPropertyChanging();
+			entity.AIRPORT = this;
+		}
+		
+		private void detach_FLIGHTs(FLIGHT entity)
+		{
+			this.SendPropertyChanging();
+			entity.AIRPORT = null;
+		}
+		
+		private void attach_FLIGHTs1(FLIGHT entity)
+		{
+			this.SendPropertyChanging();
+			entity.AIRPORT1 = this;
+		}
+		
+		private void detach_FLIGHTs1(FLIGHT entity)
+		{
+			this.SendPropertyChanging();
+			entity.AIRPORT1 = null;
+		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.COUNTRY_ORIGIN")]
-	public partial class COUNTRY_ORIGIN
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.COUNTRY")]
+	public partial class COUNTRY : INotifyPropertyChanging, INotifyPropertyChanged
 	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private string _Name;
 		
-		public COUNTRY_ORIGIN()
+		private EntitySet<MAJOR_CITY> _MAJOR_CITies;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    #endregion
+		
+		public COUNTRY()
 		{
+			this._MAJOR_CITies = new EntitySet<MAJOR_CITY>(new Action<MAJOR_CITY>(this.attach_MAJOR_CITies), new Action<MAJOR_CITY>(this.detach_MAJOR_CITies));
+			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string Name
 		{
 			get
@@ -145,9 +336,587 @@ namespace DataScriptsCPSC471
 			{
 				if ((this._Name != value))
 				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
 					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
 				}
 			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="COUNTRY_MAJOR_CITY", Storage="_MAJOR_CITies", ThisKey="Name", OtherKey="CountryName")]
+		public EntitySet<MAJOR_CITY> MAJOR_CITies
+		{
+			get
+			{
+				return this._MAJOR_CITies;
+			}
+			set
+			{
+				this._MAJOR_CITies.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_MAJOR_CITies(MAJOR_CITY entity)
+		{
+			this.SendPropertyChanging();
+			entity.COUNTRY = this;
+		}
+		
+		private void detach_MAJOR_CITies(MAJOR_CITY entity)
+		{
+			this.SendPropertyChanging();
+			entity.COUNTRY = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.COMPANY")]
+	public partial class COMPANY : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _Name;
+		
+		private string _CityName;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnCityNameChanging(string value);
+    partial void OnCityNameChanged();
+    #endregion
+		
+		public COMPANY()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CityName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string CityName
+		{
+			get
+			{
+				return this._CityName;
+			}
+			set
+			{
+				if ((this._CityName != value))
+				{
+					this.OnCityNameChanging(value);
+					this.SendPropertyChanging();
+					this._CityName = value;
+					this.SendPropertyChanged("CityName");
+					this.OnCityNameChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FLIGHT")]
+	public partial class FLIGHT : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _Flight_id;
+		
+		private int _distance;
+		
+		private System.DateTime _arrival_time;
+		
+		private System.DateTime _departure_time;
+		
+		private string _arrival_airport;
+		
+		private string _departure_airport;
+		
+		private int _base_price;
+		
+		private EntityRef<AIRPORT> _AIRPORT;
+		
+		private EntityRef<AIRPORT> _AIRPORT1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnFlight_idChanging(string value);
+    partial void OnFlight_idChanged();
+    partial void OndistanceChanging(int value);
+    partial void OndistanceChanged();
+    partial void Onarrival_timeChanging(System.DateTime value);
+    partial void Onarrival_timeChanged();
+    partial void Ondeparture_timeChanging(System.DateTime value);
+    partial void Ondeparture_timeChanged();
+    partial void Onarrival_airportChanging(string value);
+    partial void Onarrival_airportChanged();
+    partial void Ondeparture_airportChanging(string value);
+    partial void Ondeparture_airportChanged();
+    partial void Onbase_priceChanging(int value);
+    partial void Onbase_priceChanged();
+    #endregion
+		
+		public FLIGHT()
+		{
+			this._AIRPORT = default(EntityRef<AIRPORT>);
+			this._AIRPORT1 = default(EntityRef<AIRPORT>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Flight_id", DbType="NVarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string Flight_id
+		{
+			get
+			{
+				return this._Flight_id;
+			}
+			set
+			{
+				if ((this._Flight_id != value))
+				{
+					this.OnFlight_idChanging(value);
+					this.SendPropertyChanging();
+					this._Flight_id = value;
+					this.SendPropertyChanged("Flight_id");
+					this.OnFlight_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_distance", DbType="Int NOT NULL")]
+		public int distance
+		{
+			get
+			{
+				return this._distance;
+			}
+			set
+			{
+				if ((this._distance != value))
+				{
+					this.OndistanceChanging(value);
+					this.SendPropertyChanging();
+					this._distance = value;
+					this.SendPropertyChanged("distance");
+					this.OndistanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_arrival_time", DbType="Date NOT NULL")]
+		public System.DateTime arrival_time
+		{
+			get
+			{
+				return this._arrival_time;
+			}
+			set
+			{
+				if ((this._arrival_time != value))
+				{
+					this.Onarrival_timeChanging(value);
+					this.SendPropertyChanging();
+					this._arrival_time = value;
+					this.SendPropertyChanged("arrival_time");
+					this.Onarrival_timeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_departure_time", DbType="Date NOT NULL")]
+		public System.DateTime departure_time
+		{
+			get
+			{
+				return this._departure_time;
+			}
+			set
+			{
+				if ((this._departure_time != value))
+				{
+					this.Ondeparture_timeChanging(value);
+					this.SendPropertyChanging();
+					this._departure_time = value;
+					this.SendPropertyChanged("departure_time");
+					this.Ondeparture_timeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_arrival_airport", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string arrival_airport
+		{
+			get
+			{
+				return this._arrival_airport;
+			}
+			set
+			{
+				if ((this._arrival_airport != value))
+				{
+					if (this._AIRPORT1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onarrival_airportChanging(value);
+					this.SendPropertyChanging();
+					this._arrival_airport = value;
+					this.SendPropertyChanged("arrival_airport");
+					this.Onarrival_airportChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_departure_airport", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string departure_airport
+		{
+			get
+			{
+				return this._departure_airport;
+			}
+			set
+			{
+				if ((this._departure_airport != value))
+				{
+					if (this._AIRPORT.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Ondeparture_airportChanging(value);
+					this.SendPropertyChanging();
+					this._departure_airport = value;
+					this.SendPropertyChanged("departure_airport");
+					this.Ondeparture_airportChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_base_price", DbType="Int NOT NULL")]
+		public int base_price
+		{
+			get
+			{
+				return this._base_price;
+			}
+			set
+			{
+				if ((this._base_price != value))
+				{
+					this.Onbase_priceChanging(value);
+					this.SendPropertyChanging();
+					this._base_price = value;
+					this.SendPropertyChanged("base_price");
+					this.Onbase_priceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AIRPORT_FLIGHT", Storage="_AIRPORT", ThisKey="departure_airport", OtherKey="Name", IsForeignKey=true)]
+		public AIRPORT AIRPORT
+		{
+			get
+			{
+				return this._AIRPORT.Entity;
+			}
+			set
+			{
+				AIRPORT previousValue = this._AIRPORT.Entity;
+				if (((previousValue != value) 
+							|| (this._AIRPORT.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AIRPORT.Entity = null;
+						previousValue.FLIGHTs.Remove(this);
+					}
+					this._AIRPORT.Entity = value;
+					if ((value != null))
+					{
+						value.FLIGHTs.Add(this);
+						this._departure_airport = value.Name;
+					}
+					else
+					{
+						this._departure_airport = default(string);
+					}
+					this.SendPropertyChanged("AIRPORT");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AIRPORT_FLIGHT1", Storage="_AIRPORT1", ThisKey="arrival_airport", OtherKey="Name", IsForeignKey=true)]
+		public AIRPORT AIRPORT1
+		{
+			get
+			{
+				return this._AIRPORT1.Entity;
+			}
+			set
+			{
+				AIRPORT previousValue = this._AIRPORT1.Entity;
+				if (((previousValue != value) 
+							|| (this._AIRPORT1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AIRPORT1.Entity = null;
+						previousValue.FLIGHTs1.Remove(this);
+					}
+					this._AIRPORT1.Entity = value;
+					if ((value != null))
+					{
+						value.FLIGHTs1.Add(this);
+						this._arrival_airport = value.Name;
+					}
+					else
+					{
+						this._arrival_airport = default(string);
+					}
+					this.SendPropertyChanged("AIRPORT1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MAJOR_CITY")]
+	public partial class MAJOR_CITY : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _Name;
+		
+		private string _CountryName;
+		
+		private EntitySet<AIRPORT> _AIRPORTs;
+		
+		private EntityRef<COUNTRY> _COUNTRY;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnCountryNameChanging(string value);
+    partial void OnCountryNameChanged();
+    #endregion
+		
+		public MAJOR_CITY()
+		{
+			this._AIRPORTs = new EntitySet<AIRPORT>(new Action<AIRPORT>(this.attach_AIRPORTs), new Action<AIRPORT>(this.detach_AIRPORTs));
+			this._COUNTRY = default(EntityRef<COUNTRY>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CountryName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string CountryName
+		{
+			get
+			{
+				return this._CountryName;
+			}
+			set
+			{
+				if ((this._CountryName != value))
+				{
+					if (this._COUNTRY.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCountryNameChanging(value);
+					this.SendPropertyChanging();
+					this._CountryName = value;
+					this.SendPropertyChanged("CountryName");
+					this.OnCountryNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="MAJOR_CITY_AIRPORT", Storage="_AIRPORTs", ThisKey="Name", OtherKey="CityName")]
+		public EntitySet<AIRPORT> AIRPORTs
+		{
+			get
+			{
+				return this._AIRPORTs;
+			}
+			set
+			{
+				this._AIRPORTs.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="COUNTRY_MAJOR_CITY", Storage="_COUNTRY", ThisKey="CountryName", OtherKey="Name", IsForeignKey=true)]
+		public COUNTRY COUNTRY
+		{
+			get
+			{
+				return this._COUNTRY.Entity;
+			}
+			set
+			{
+				COUNTRY previousValue = this._COUNTRY.Entity;
+				if (((previousValue != value) 
+							|| (this._COUNTRY.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._COUNTRY.Entity = null;
+						previousValue.MAJOR_CITies.Remove(this);
+					}
+					this._COUNTRY.Entity = value;
+					if ((value != null))
+					{
+						value.MAJOR_CITies.Add(this);
+						this._CountryName = value.Name;
+					}
+					else
+					{
+						this._CountryName = default(string);
+					}
+					this.SendPropertyChanged("COUNTRY");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_AIRPORTs(AIRPORT entity)
+		{
+			this.SendPropertyChanging();
+			entity.MAJOR_CITY = this;
+		}
+		
+		private void detach_AIRPORTs(AIRPORT entity)
+		{
+			this.SendPropertyChanging();
+			entity.MAJOR_CITY = null;
 		}
 	}
 }

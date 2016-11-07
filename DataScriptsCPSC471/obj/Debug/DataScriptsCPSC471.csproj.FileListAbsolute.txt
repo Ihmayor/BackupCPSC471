@@ -4,3 +4,4 @@ C:\Users\User\Documents\Visual Studio 2013\Projects\CPSC471\DataScriptsCPSC471\b
 C:\Users\User\Documents\Visual Studio 2013\Projects\CPSC471\DataScriptsCPSC471\bin\Debug\DataScriptsCPSC471.pdb
 C:\Users\User\Documents\Visual Studio 2013\Projects\CPSC471\DataScriptsCPSC471\obj\Debug\DataScriptsCPSC471.exe
 C:\Users\User\Documents\Visual Studio 2013\Projects\CPSC471\DataScriptsCPSC471\obj\Debug\DataScriptsCPSC471.pdb
+C:\Users\User\Documents\Visual Studio 2013\Projects\CPSC471\DataScriptsCPSC471\obj\Debug\DataScriptsCPSC471.csprojResolveAssemblyReference.cache
