@@ -21,25 +21,36 @@
       <Column Name="CityName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
-  <Table Name="dbo.FLIGHT" Member="FLIGHTs">
-    <Type Name="FLIGHT">
-      <Column Name="Flight_id" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="distance" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="arrival_time" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
-      <Column Name="departure_time" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
-      <Column Name="arrival_airport" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="departure_airport" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="base_price" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="AIRPORT_FLIGHT" Member="AIRPORT" ThisKey="departure_airport" OtherKey="Name" Type="AIRPORT" IsForeignKey="true" />
-      <Association Name="AIRPORT_FLIGHT1" Member="AIRPORT1" ThisKey="arrival_airport" OtherKey="Name" Type="AIRPORT" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.MAJOR_CITY" Member="MAJOR_CITies">
     <Type Name="MAJOR_CITY">
       <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="CountryName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
       <Association Name="MAJOR_CITY_AIRPORT" Member="AIRPORTs" ThisKey="Name" OtherKey="CityName" Type="AIRPORT" />
       <Association Name="COUNTRY_MAJOR_CITY" Member="COUNTRY" ThisKey="CountryName" OtherKey="Name" Type="COUNTRY" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FLIGHT" Member="FLIGHTs">
+    <Type Name="FLIGHT">
+      <Column Name="Flight_id" Type="System.String" DbType="NVarChar(255) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="distance" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="arrival_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="departure_time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="arrival_airport" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="departure_airport" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="base_price" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="FLIGHT_PATH" Member="PATHs" ThisKey="Flight_id" OtherKey="flight_id" Type="PATH" />
+      <Association Name="AIRPORT_FLIGHT" Member="AIRPORT" ThisKey="departure_airport" OtherKey="Name" Type="AIRPORT" IsForeignKey="true" />
+      <Association Name="AIRPORT_FLIGHT1" Member="AIRPORT1" ThisKey="arrival_airport" OtherKey="Name" Type="AIRPORT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="PATHs">
+    <Type Name="PATH">
+      <Column Member="aiportname_1" Type="System.String" CanBeNull="false" />
+      <Column Member="airportname_2" Type="System.String" CanBeNull="false" />
+      <Column Member="path_id" Type="System.String" CanBeNull="false" />
+      <Column Member="distance" Type="int" CanBeNull="false" />
+      <Column Member="flight_id" Type="System.String" CanBeNull="false" />
+      <Association Name="FLIGHT_PATH" Member="FLIGHT" ThisKey="flight_id" OtherKey="Flight_id" Type="FLIGHT" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
