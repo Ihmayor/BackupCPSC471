@@ -39,9 +39,6 @@ namespace PersonalPopuplation
     partial void InsertCreditCard(CreditCard instance);
     partial void UpdateCreditCard(CreditCard instance);
     partial void DeleteCreditCard(CreditCard instance);
-    partial void InsertSeat(Seat instance);
-    partial void UpdateSeat(Seat instance);
-    partial void DeleteSeat(Seat instance);
     partial void InsertBid(Bid instance);
     partial void UpdateBid(Bid instance);
     partial void DeleteBid(Bid instance);
@@ -69,6 +66,9 @@ namespace PersonalPopuplation
     partial void InsertPath(Path instance);
     partial void UpdatePath(Path instance);
     partial void DeletePath(Path instance);
+    partial void InsertSeat(Seat instance);
+    partial void UpdateSeat(Seat instance);
+    partial void DeleteSeat(Seat instance);
     #endregion
 		
 		public DatabaseClassDataContext() : 
@@ -122,14 +122,6 @@ namespace PersonalPopuplation
 			get
 			{
 				return this.GetTable<CreditCard>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Seat> Seats
-		{
-			get
-			{
-				return this.GetTable<Seat>();
 			}
 		}
 		
@@ -202,6 +194,14 @@ namespace PersonalPopuplation
 			get
 			{
 				return this.GetTable<Path>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Seat> Seats
+		{
+			get
+			{
+				return this.GetTable<Seat>();
 			}
 		}
 	}
@@ -708,185 +708,6 @@ namespace PersonalPopuplation
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Seat")]
-	public partial class Seat : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _seat_id;
-		
-		private string _flight_id;
-		
-		private System.DateTime _end_auction_date;
-		
-		private EntitySet<Bid> _Bids;
-		
-		private EntityRef<Flight> _Flight;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void Onseat_idChanging(string value);
-    partial void Onseat_idChanged();
-    partial void Onflight_idChanging(string value);
-    partial void Onflight_idChanged();
-    partial void Onend_auction_dateChanging(System.DateTime value);
-    partial void Onend_auction_dateChanged();
-    #endregion
-		
-		public Seat()
-		{
-			this._Bids = new EntitySet<Bid>(new Action<Bid>(this.attach_Bids), new Action<Bid>(this.detach_Bids));
-			this._Flight = default(EntityRef<Flight>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_seat_id", DbType="NVarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string seat_id
-		{
-			get
-			{
-				return this._seat_id;
-			}
-			set
-			{
-				if ((this._seat_id != value))
-				{
-					this.Onseat_idChanging(value);
-					this.SendPropertyChanging();
-					this._seat_id = value;
-					this.SendPropertyChanged("seat_id");
-					this.Onseat_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_flight_id", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
-		public string flight_id
-		{
-			get
-			{
-				return this._flight_id;
-			}
-			set
-			{
-				if ((this._flight_id != value))
-				{
-					if (this._Flight.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onflight_idChanging(value);
-					this.SendPropertyChanging();
-					this._flight_id = value;
-					this.SendPropertyChanged("flight_id");
-					this.Onflight_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_end_auction_date", DbType="DateTime NOT NULL")]
-		public System.DateTime end_auction_date
-		{
-			get
-			{
-				return this._end_auction_date;
-			}
-			set
-			{
-				if ((this._end_auction_date != value))
-				{
-					this.Onend_auction_dateChanging(value);
-					this.SendPropertyChanging();
-					this._end_auction_date = value;
-					this.SendPropertyChanged("end_auction_date");
-					this.Onend_auction_dateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Seat_Bid", Storage="_Bids", ThisKey="seat_id", OtherKey="seat_id")]
-		public EntitySet<Bid> Bids
-		{
-			get
-			{
-				return this._Bids;
-			}
-			set
-			{
-				this._Bids.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Flight_Seat", Storage="_Flight", ThisKey="flight_id", OtherKey="Flight_id", IsForeignKey=true)]
-		public Flight Flight
-		{
-			get
-			{
-				return this._Flight.Entity;
-			}
-			set
-			{
-				Flight previousValue = this._Flight.Entity;
-				if (((previousValue != value) 
-							|| (this._Flight.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Flight.Entity = null;
-						previousValue.Seats.Remove(this);
-					}
-					this._Flight.Entity = value;
-					if ((value != null))
-					{
-						value.Seats.Add(this);
-						this._flight_id = value.Flight_id;
-					}
-					else
-					{
-						this._flight_id = default(string);
-					}
-					this.SendPropertyChanged("Flight");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Bids(Bid entity)
-		{
-			this.SendPropertyChanging();
-			entity.Seat = this;
-		}
-		
-		private void detach_Bids(Bid entity)
-		{
-			this.SendPropertyChanging();
-			entity.Seat = null;
 		}
 	}
 	
@@ -2808,6 +2629,185 @@ namespace PersonalPopuplation
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Seat")]
+	public partial class Seat : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _seat_id;
+		
+		private string _flight_id;
+		
+		private System.DateTime _end_auction_date;
+		
+		private EntitySet<Bid> _Bids;
+		
+		private EntityRef<Flight> _Flight;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void Onseat_idChanging(string value);
+    partial void Onseat_idChanged();
+    partial void Onflight_idChanging(string value);
+    partial void Onflight_idChanged();
+    partial void Onend_auction_dateChanging(System.DateTime value);
+    partial void Onend_auction_dateChanged();
+    #endregion
+		
+		public Seat()
+		{
+			this._Bids = new EntitySet<Bid>(new Action<Bid>(this.attach_Bids), new Action<Bid>(this.detach_Bids));
+			this._Flight = default(EntityRef<Flight>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_seat_id", DbType="VarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string seat_id
+		{
+			get
+			{
+				return this._seat_id;
+			}
+			set
+			{
+				if ((this._seat_id != value))
+				{
+					this.Onseat_idChanging(value);
+					this.SendPropertyChanging();
+					this._seat_id = value;
+					this.SendPropertyChanged("seat_id");
+					this.Onseat_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_flight_id", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string flight_id
+		{
+			get
+			{
+				return this._flight_id;
+			}
+			set
+			{
+				if ((this._flight_id != value))
+				{
+					if (this._Flight.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onflight_idChanging(value);
+					this.SendPropertyChanging();
+					this._flight_id = value;
+					this.SendPropertyChanged("flight_id");
+					this.Onflight_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_end_auction_date", DbType="DateTime NOT NULL")]
+		public System.DateTime end_auction_date
+		{
+			get
+			{
+				return this._end_auction_date;
+			}
+			set
+			{
+				if ((this._end_auction_date != value))
+				{
+					this.Onend_auction_dateChanging(value);
+					this.SendPropertyChanging();
+					this._end_auction_date = value;
+					this.SendPropertyChanged("end_auction_date");
+					this.Onend_auction_dateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Seat_Bid", Storage="_Bids", ThisKey="seat_id", OtherKey="seat_id")]
+		public EntitySet<Bid> Bids
+		{
+			get
+			{
+				return this._Bids;
+			}
+			set
+			{
+				this._Bids.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Flight_Seat", Storage="_Flight", ThisKey="flight_id", OtherKey="Flight_id", IsForeignKey=true)]
+		public Flight Flight
+		{
+			get
+			{
+				return this._Flight.Entity;
+			}
+			set
+			{
+				Flight previousValue = this._Flight.Entity;
+				if (((previousValue != value) 
+							|| (this._Flight.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Flight.Entity = null;
+						previousValue.Seats.Remove(this);
+					}
+					this._Flight.Entity = value;
+					if ((value != null))
+					{
+						value.Seats.Add(this);
+						this._flight_id = value.Flight_id;
+					}
+					else
+					{
+						this._flight_id = default(string);
+					}
+					this.SendPropertyChanged("Flight");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Bids(Bid entity)
+		{
+			this.SendPropertyChanging();
+			entity.Seat = this;
+		}
+		
+		private void detach_Bids(Bid entity)
+		{
+			this.SendPropertyChanging();
+			entity.Seat = null;
 		}
 	}
 }
