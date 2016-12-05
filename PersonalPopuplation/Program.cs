@@ -12,8 +12,6 @@ namespace PersonalPopuplation
 
         static Random _random = new Random();
 
-        static string SQLConnectionString { get { return string.Format("Server={0};Database={1};User Id={2};Password={3};", "136.159.7.84 ", "CPSC471_Fall2016_G7", "CPSC471_Fall2016_G7", "a\"-na9o$^`I&\"nw"); } }
-
 
         public static void Main(string[] args)
         {
