@@ -4,13 +4,11 @@ PersonalPopulation folder contains the console application used to generate mock
 Website pages folder contains the php SQL database query calls
 
 # NOTES ABOUT THE CONSOLE APPLICATION
-THE CONSOLE APPLICATION WAS CREATED TO RUN VARIOUS SCRIPTS THAT POPULATED THE LOCAL MS SQL DATABASE STORED ON THE USER'S LOCAL MACHINE
-HOWEVER THE WEBSITE CONNECTS TO A MYSQL DATABASE STORED THE WEBSITE HOST.
-THE INFORMATION GENERATED FROM THE CONSOLE APPLICATION WAS MANUALLY EXPORTED FROM THE MS SQL DATABASE TO THE MYSQL DATABASE.
-
-
+The console application was created to run various scripts that populated the local MS SQL database stored on the user's local machine
+however the website connects to a MYSQL database stored the website host.
+The information generated from the console application was manually exported from the  MS SQLdatabase to the mysql database.
 
 
 # NOTES ABOUT THE WEBSITE PAGES
-THE WEBSITE PAGES ARE RELIANT ON THE DATABASE STORED UPON THE 000webhost.com SITE. UNLESS CREDENTIALS
-ARE CHANGED THROUGHOUT ALL THE PAGES, WEBSITE PAGES WILL NOT RUN ON LOCAL MACHINE. 
+the website pages are reliant on the database stored upon the 000webhost.com site. unless credentials
+are changed throughout all the pages, website pages will not run on local machine. 
